@@ -4,31 +4,24 @@ namespace mauricerenck\AutoPublish;
 
 use Kirby\Http\Response;
 
+require_once __DIR__ . '/publish.php';
+
 return [
     [
         'pattern' => 'autopublish/cron/(:any)',
         'method' => 'GET',
-        'action' => function ($secret) {
+        /**
+         * Webhook endpoint: publishes all due pages when called with the
+         * secret configured via `mauricerenck.autopublish.secret`.
+         */
+        'action' => function (string $secret): Response {
+            // onPageLoad already covers publishing; keep only one trigger active
+            if (option('mauricerenck.autopublish.onPageLoad', false) === true) {
+                return new Response('Forbidden', 'text/plain', 401);
+            }
+
             if (option('mauricerenck.autopublish.secret', '') === $secret && $secret !== '') {
-                $dateField = option('mauricerenck.autopublish.dateField', 'autopublishDate');
-
-                $unpublishedPages = kirby()->site()->index()->drafts()->filter(function ($page) use ($dateField) {
-                    // an empty date field's toDate() is null, and `null <= time()`
-                    // is true in PHP, so without this check every draft with the
-                    // toggle on but no date yet would be treated as due
-                    $date = $page->$dateField();
-                    return $date->isNotEmpty() && $date->toDate() <= time();
-                })->filterBy('autopublish', '==', true);
-
-                kirby()->impersonate('kirby');
-                foreach ($unpublishedPages as $page) {
-                    try {
-                        $page->changeStatus('listed');
-                    } catch (\Throwable $e) {
-                        // one draft failing (e.g. missing required fields) must
-                        // not block every other due page from being published
-                    }
-                }
+                publishDuePages();
 
                 return new Response('OK', 'text/plain');
             }

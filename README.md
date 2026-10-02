@@ -63,11 +63,29 @@ You can now trigger the Webhook:
 
 Replace example.com with your hostname and `my-secret` with the secret you set in your config.php. Whenever you trigger the Webhook the plugin will look for unpublished pages with a date older or equal to the current date-time and then publishes the page.
 
+### Publish on page load
+
+If you don't have a cron job available, you can instead have the plugin check for due pages on every frontend page load, before the page is rendered:
+
+```php
+'mauricerenck.autopublish.onPageLoad' => true,
+```
+
+The drafts scan runs at most once per `onPageLoadInterval` seconds (default `60`). Kirby's cache stores the time of the last run, so most requests in between skip the scan entirely:
+
+```php
+'mauricerenck.autopublish.onPageLoadInterval' => 60,
+```
+
+Only one trigger is active at a time: when `onPageLoad` is enabled, the webhook is disabled and always responds with `Forbidden`.
+
 ## Options
 
 Please make sure to prefix all options with `mauricerenck.autopublish` or use the array notation.
 
-| Option      | Default             | Description                       |
-| ----------- | ------------------- | --------------------------------- |
-| `dateField` | `'autopublishDate'` | The field name of your date field |
-| `secret`    | `''`                | A secret to secure the webhook    |
+| Option               | Default             | Description                                            |
+| -------------------- | ------------------- | ------------------------------------------------------- |
+| `dateField`          | `'autopublishDate'` | The field name of your date field                      |
+| `secret`             | `''`                | A secret to secure the webhook                         |
+| `onPageLoad`         | `false`             | Also check for due pages on every page render          |
+| `onPageLoadInterval` | `60`                | Minimum seconds between checks when `onPageLoad` is on |
