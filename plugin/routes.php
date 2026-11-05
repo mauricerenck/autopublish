@@ -21,7 +21,8 @@ return [
             }
 
             if (option('mauricerenck.autopublish.secret', '') === $secret && $secret !== '') {
-                publishDuePages();
+                $publisher = new Publisher();
+                $publisher->publishDuePages();
 
                 return new Response('OK', 'text/plain');
             }
