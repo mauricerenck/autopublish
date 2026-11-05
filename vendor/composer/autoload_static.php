@@ -34,6 +34,7 @@ class ComposerStaticInit5f51d4a7905b5c3d59c3d65fec7b3101
         'Kirby\\ComposerInstaller\\Installer' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/Installer.php',
         'Kirby\\ComposerInstaller\\Plugin' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/Plugin.php',
         'Kirby\\ComposerInstaller\\PluginInstaller' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/PluginInstaller.php',
+        'mauricerenck\\AutoPublish\\Publisher' => __DIR__ . '/../..' . '/lib/Publisher.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
