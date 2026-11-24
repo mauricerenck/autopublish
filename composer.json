@@ -1,6 +1,6 @@
 {
   "name": "mauricerenck/autopublish",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "type": "kirby-plugin",
   "homepage": "https://github.com/mauricerenck/autopublish",
   "description": "Set a date to automatically publish a page",
